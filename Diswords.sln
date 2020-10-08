@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Diswords", "Diswords\Diswords.csproj", "{C8AFF0AB-6948-40A4-A58D-77348F5543D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C8AFF0AB-6948-40A4-A58D-77348F5543D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8AFF0AB-6948-40A4-A58D-77348F5543D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C8AFF0AB-6948-40A4-A58D-77348F5543D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8AFF0AB-6948-40A4-A58D-77348F5543D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
