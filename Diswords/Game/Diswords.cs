@@ -97,7 +97,7 @@ namespace Diswords.Game
         {
             Guild.GamesPlayed++;
             Guild.OverwriteTo(
-                $"{_client.Config.RootDirectory}{Path.DirectorySeparatorChar}{_client.Config.GuildsDirectoryName}{(_client.Config.GuildsDirectoryName == "" ? "" : Path.PathSeparator.ToString())}{Guild.Id}.json");
+                $"{_client.Config.RootDirectory}{Path.DirectorySeparatorChar}{_client.Config.GuildsDirectoryName}{(_client.Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Guild.Id}.json");
             switch (_newChannelCreated)
             {
                 case true:
