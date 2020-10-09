@@ -16,7 +16,7 @@ Here's a quick GIF showing how to create a basic game:
 
 ## How do I build it?
 
-To run this script, you'll need to build it.
+To run this bot, you'll need to build it.
 It uses .NET Core, which you can install here: https://dotnet.microsoft.com/download
 
 1. Clone the repository: `git clone https://github.com/NedoProgrammer/Diswords.git`
