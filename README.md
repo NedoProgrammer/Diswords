@@ -21,7 +21,7 @@ It uses .NET Core, which you can install here: https://dotnet.microsoft.com/down
 
 1. Clone the repository: `git clone https://github.com/NedoProgrammer/Diswords.git`
 
-2. `cd` into the project directory: `cd Diswords`
+2. `cd` into the project directory: `cd Diswords/Diswords`
 
 3. Build the project: `dotnet build --configuration Release`  
 
