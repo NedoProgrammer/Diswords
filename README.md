@@ -27,6 +27,20 @@ It uses .NET Core, which you can install here: https://dotnet.microsoft.com/down
 
 When finished, you'll find the executable in `/bin/Release/netcoreapp3.1/`
 
+If you don't want to change the code, create a `myconfig.json` file in the `/bin/Release/netcoreapp3.1/` directory and put this into it:
+
+```json
+{
+    "Token": "your discord bot's token",
+    "DefaultLanguage": "en",
+    "DefaultPrefix": "dw.",
+    "RootDirectory": "",
+    "GuildsDirectoryName": "Guilds",
+    "LanguagesDirectoryName": "Languages",
+    "LoadingGif": "loading.gif"
+}
+```
+
 ## And this is the end?
 
 No, I'll update this README with new stuff and add new features to the bot, but not now.
