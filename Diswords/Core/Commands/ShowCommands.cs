@@ -1,18 +1,27 @@
+using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using System.Threading.Tasks;
-using System.Linq;
 using Diswords.Core.Helpers;
 
 namespace Diswords.Core.Commands
 {
-    public class ShowCommands: AdvancedContext
+    /// <summary>
+    ///     Just like a "help command" :D
+    /// </summary>
+    public class ShowCommands : AdvancedContext
     {
+        /// <summary>
+        ///     Discord.NET method..
+        /// </summary>
+        /// <returns>nothing</returns>
         [Command("commands")]
+        [Alias("команды")]
         public async Task PrintCommands()
         {
-        	var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands).WithDescription(Locale.Help);
-        	await Context.Channel.SendMessageAsync(null, false, embedBuilder.Build());
+            var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands)
+                .WithDescription(string.Format(Locale.Help, Client.Guilds.First(g => g.Id == Context.Guild.Id).Prefix));
+            await Context.Channel.SendMessageAsync(null, false, embedBuilder.Build());
         }
     }
 }

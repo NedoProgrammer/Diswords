@@ -1,22 +1,35 @@
+using System.Linq;
+using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using System.Threading.Tasks;
-using System.Linq;
+using Diswords.Core.Helpers;
+
 namespace Diswords.Core.Commands
 {
-    public class StopGame: AdvancedContext
+    /// <summary>
+    ///     A game command that stops the current game.
+    /// </summary>
+    public class StopGame : AdvancedContext
     {
+        /// <summary>
+        ///     Discord.NET method.
+        ///     <remarks>Only the creator of the game can stop it.</remarks>
+        /// </summary>
+        /// <returns>nothing</returns>
         [Command("stop")]
+        [Alias("стоп")]
         public async Task Stop()
         {
-            if(!Client.Games.Any(x => x.Creator.Id == Context.User.Id) && !(Context.User as IGuildUser).GuildPermissions.Administrator)
+            if (Client.Games.All(x => x.Creator.Id != Context.User.Id) ||
+                !((IGuildUser) Context.User).GuildPermissions.Administrator)
             {
-                await Context.Channel.SendMessageAsync(Locale.NotEnoughPermissions);
+                await Context.Channel.SendMessageAsync(null, false,
+                    EmbedHelper.BuildError(Locale, Locale.NotEnoughPermissions));
                 return;
             }
+
             var game = Client.Games.FirstOrDefault(x => x.Creator.Id == Context.User.Id);
-            if(game != default)
-                game.Stop();
+            game?.Stop();
         }
     }
 }

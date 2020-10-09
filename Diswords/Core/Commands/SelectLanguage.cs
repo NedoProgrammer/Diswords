@@ -1,8 +1,6 @@
 #nullable enable
-using System;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -12,41 +10,64 @@ using Diswords.Locales;
 
 namespace Diswords.Core.Commands
 {
-    public class SelectLanguage: AdvancedContext
+    /// <summary>
+    ///     Moderator command that changes the default language of the server.
+    /// </summary>
+    public class SelectLanguage : AdvancedContext
     {
+        /// <summary>
+        ///     Discord.NET method..
+        ///     <para>Prints a list of all available languages.</para>
+        /// </summary>
+        /// <returns>nothing</returns>
         [Command("language")]
+        [Alias("язык")]
         public async Task ListLanguages()
         {
-            var description = Client.Languages.Aggregate("", (current, language) => current + $"\n• {language.FlagEmoji.Name} {language.Name} - `{language.ShortName}`");
-            var embed = new EmbedBuilder().WithTitle(Locale.Languages).WithColor(Color.Blue).WithDescription(description).Build();
+            var description = Client.Languages.Aggregate("",
+                (current, language) =>
+                    current + $"\n• {language.FlagEmoji.Name} {language.Name} - `{language.ShortName}`");
+            var embed = new EmbedBuilder().WithTitle(Locale.Languages).WithColor(Color.Blue)
+                .WithDescription(description).Build();
             await Context.Channel.SendMessageAsync(null, false, embed);
         }
+
+        /// <summary>
+        ///     Discord.NET method..
+        ///     <para>Sets the new language (from the list, see <see cref="ListLanguages" />)</para>
+        /// </summary>
+        /// <param name="shortName"></param>
+        /// <returns></returns>
         [Command("language")]
+        [Alias("язык")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task Select(string shortName)
         {
+            //The requested language was not found.
             if (Client.Languages.All(l => l.ShortName != shortName))
             {
-                await Context.Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale, string.Format(Locale.InvalidLanguage, shortName)));
-                return;
+                await Context.Channel.SendMessageAsync(null, false,
+                    EmbedHelper.BuildError(Locale, string.Format(Locale.InvalidLanguage, shortName)));
             }
             else
             {
+                //The loading GIF :D
                 RestUserMessage? loading = null;
                 if (!string.IsNullOrEmpty(Client.Config.LoadingGif))
-                {
                     loading = await Context.Channel.SendFileAsync(Client.Config.LoadingGif);
-                }
 
                 var guild = Client.Guilds.First(g => g.Id == Context.Guild.Id);
                 guild.Language = shortName;
                 var path =
-                    $"{Client.Config.RootDirectory}/{Client.Config.GuildsDirectoryName}{(Client.Config.GuildsDirectoryName == "" ? "" : "/")}{guild.Id}.json";
-                await File.WriteAllTextAsync(path, guild.ToJson());
+                    $"{Client.Config.RootDirectory}{Path.DirectorySeparatorChar}{Client.Config.GuildsDirectoryName}{(Client.Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{guild.Id}.json";
+                //Write the new guild to a file.
+                guild.OverwriteTo(path);
                 if (loading != null) await loading.DeleteAsync();
+                //Send an embed with the new language.
                 var newLocale = ILocale.Find(shortName);
-                await Context.Channel.SendMessageAsync(null, false, EmbedHelper.BuildSuccess(newLocale, newLocale.LanguageChanged));
+                await Context.Channel.SendMessageAsync(null, false,
+                    EmbedHelper.BuildSuccess(newLocale, newLocale.LanguageChanged));
             }
-        }   
+        }
     }
 }
