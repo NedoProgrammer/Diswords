@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord;
 using Discord.Commands;
 using Discord.Rest;
 using Diswords.Core.Helpers;
@@ -26,6 +27,8 @@ namespace Diswords.Core.Commands
         /// <returns>nothing..</returns>
         [Command("suggest", RunMode = RunMode.Async)]
         [Alias("предложить")]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
         public async Task Suggest(string language, string word)
         {
             //Send a loading GIF if the file for it exists.

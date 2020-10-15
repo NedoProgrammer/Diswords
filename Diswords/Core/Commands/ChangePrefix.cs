@@ -22,6 +22,7 @@ namespace Diswords.Core.Commands
         [Command("prefix", RunMode = RunMode.Async)]
         [Alias("префикс")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task SetPrefix(string prefix)
         {
             //The loading gif :D

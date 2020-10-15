@@ -18,6 +18,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         [Command("stop")]
         [Alias("стоп")]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task Stop()
         {
             if (Client.Games.All(x => x.Creator.Id != Context.User.Id) ||

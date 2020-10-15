@@ -20,6 +20,9 @@ namespace Diswords.Core.Commands
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("create")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
+        
         [Alias("создать")]
         public async Task Create()
         {
@@ -53,6 +56,9 @@ namespace Diswords.Core.Commands
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("createnew")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
+        [RequireBotPermission(ChannelPermission.ManageChannels)]
         [Alias("создатьновую")]
         public async Task CreateNew()
         {
@@ -86,6 +92,8 @@ namespace Diswords.Core.Commands
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("create")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
         [Alias("создать")]
         public async Task Create(string language)
         {
@@ -119,6 +127,9 @@ namespace Diswords.Core.Commands
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("createnew")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
+        [RequireBotPermission(ChannelPermission.ManageMessages)]
+        [RequireBotPermission(ChannelPermission.ManageChannels)]
         [Alias("создатьновую")]
         public async Task CreateNew(string language)
         {

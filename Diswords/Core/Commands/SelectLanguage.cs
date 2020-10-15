@@ -22,6 +22,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         [Command("language")]
         [Alias("язык")]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task ListLanguages()
         {
             var description = Client.Languages.Aggregate("",
@@ -41,6 +42,7 @@ namespace Diswords.Core.Commands
         [Command("language")]
         [Alias("язык")]
         [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task Select(string shortName)
         {
             //The requested language was not found.

@@ -17,6 +17,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         [Command("commands")]
         [Alias("команды")]
+        [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task PrintCommands()
         {
             var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands)
