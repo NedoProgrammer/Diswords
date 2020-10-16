@@ -152,7 +152,6 @@ namespace Diswords
                 var jsonGuild = GetGuild(guild.Id);
                 if (jsonGuild != null)
                 {
-                    var locale = ILocale.Find(jsonGuild.Language);
                     Directory.Delete(path, true);
                 }
             };
