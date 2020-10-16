@@ -38,7 +38,8 @@ namespace Diswords.Core.Commands
                 },
                 new EmbedFieldBuilder {IsInline = true, Name = Locale.Prefix, Value = guild.Prefix}
             };
-            var embed = new EmbedBuilder().WithColor(Color.DarkGreen).WithTitle(Locale.GuildInfo).WithFields(fields).WithAuthor(new EmbedAuthorBuilder {Name = Context.Guild.Name, IconUrl = Context.Guild.IconUrl});
+            var embed = new EmbedBuilder().WithColor(Color.DarkGreen).WithTitle(Locale.GuildInfo).WithFields(fields)
+                .WithAuthor(new EmbedAuthorBuilder {Name = Context.Guild.Name, IconUrl = Context.Guild.IconUrl});
             await Context.Channel.SendMessageAsync(null, false, embed.Build());
         }
     }

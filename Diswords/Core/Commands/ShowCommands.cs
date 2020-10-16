@@ -21,7 +21,8 @@ namespace Diswords.Core.Commands
         public async Task PrintCommands()
         {
             var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands)
-                .WithDescription(string.Format(Locale.Help, Client.Guilds.First(g => g.Id == Context.Guild.Id).Prefix) + $"\n{Locale.OpenSource}");
+                .WithDescription(string.Format(Locale.Help, Client.Guilds.First(g => g.Id == Context.Guild.Id).Prefix) +
+                                 $"\n{Locale.OpenSource}");
             await Context.Channel.SendMessageAsync(null, false, embedBuilder.Build());
         }
     }

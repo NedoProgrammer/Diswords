@@ -49,6 +49,7 @@ namespace Diswords.Locales
         public string DoneProcessing { get; }
         public string Rules { get; }
         public string OpenSource { get; }
+        public string RulesWord { get; }
 
         public static ILocale Find(string shortName)
         {

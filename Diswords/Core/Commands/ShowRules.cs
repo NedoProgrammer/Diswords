@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
@@ -7,12 +6,12 @@ using Diswords.Core.Helpers;
 namespace Diswords.Core.Commands
 {
     /// <summary>
-    /// Show rules of the game "words".
+    ///     Show rules of the game "words".
     /// </summary>
-    public class ShowRules: AdvancedContext
+    public class ShowRules : AdvancedContext
     {
         /// <summary>
-        /// Discord.NET method...
+        ///     Discord.NET method...
         /// </summary>
         /// <returns></returns>
         [Command("rules")]

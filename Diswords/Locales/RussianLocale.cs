@@ -30,6 +30,8 @@ namespace Diswords.Locales
 
         public string OpenSource { get; } =
             "Вы можете найти код этого бота здесь: https://github.com/NedoProgrammer/Diswords";
+
+        public string RulesWord { get; } = "Правила";
         public string InvalidLanguage { get; } = "Язык {0} не был найден!";
 
         public string Help { get; } =

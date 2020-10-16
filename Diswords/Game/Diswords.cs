@@ -40,6 +40,11 @@ namespace Diswords.Game
         private IUser _lastSender;
 
         /// <summary>
+        ///     The bot changed the Slow Mode Interval, so whenthe game is stopped, it will set it back, even if it was 0.
+        /// </summary>
+        private readonly int _previousSlowModeInterval;
+
+        /// <summary>
         ///     Constructor.
         /// </summary>
         /// <param name="client">Diswords Client :D</param>
@@ -49,7 +54,7 @@ namespace Diswords.Game
         /// <param name="createdNewChannel">Was a new channel created just for this game?</param>
         /// <param name="language">Language of the game.</param>
         public Diswords(DiswordsClient client, IGuildUser creator, JsonGuild guild, ITextChannel channel,
-            bool createdNewChannel, JsonLanguage language)
+            bool createdNewChannel, int previousSlowModeInterval, JsonLanguage language)
         {
             Creator = creator ?? throw new ArgumentNullException(nameof(creator));
             Channel = channel ?? throw new ArgumentNullException(nameof(channel));
@@ -57,6 +62,7 @@ namespace Diswords.Game
             Locale = ILocale.Find(Language.ShortName);
             Guild = guild;
             _newChannelCreated = createdNewChannel;
+            _previousSlowModeInterval = previousSlowModeInterval;
             _client = client;
         }
 
@@ -112,6 +118,7 @@ namespace Diswords.Game
                 {
                     await Channel.SendMessageAsync(null, false, EmbedHelper.BuildSuccess(Locale, Locale.GameDeleted));
                     await Task.Delay(10000);
+                    await Channel.ModifyAsync(c => c.SlowModeInterval = _previousSlowModeInterval);
                     _client.Games.Remove(this);
                     break;
                 }

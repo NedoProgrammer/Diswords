@@ -83,6 +83,6 @@ But, if your message contains only of emojis or it is a quote of another message
         public string OpenSource { get; } =
             "Code of this bot is open-source. You can find the code here: https://github.com/NedoProgrammer/Diswords";
 
-        public string LeaveServer { get; } = "Thanks for playing! Goodbye :wave:";
+        public string RulesWord { get; } = "Rules";
     }
 }
