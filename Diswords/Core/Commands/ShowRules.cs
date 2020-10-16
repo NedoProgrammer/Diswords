@@ -7,21 +7,21 @@ using Diswords.Core.Helpers;
 namespace Diswords.Core.Commands
 {
     /// <summary>
-    ///     Just like a "help command" :D
+    /// Show rules of the game "words".
     /// </summary>
-    public class ShowCommands : AdvancedContext
+    public class ShowRules: AdvancedContext
     {
         /// <summary>
-        ///     Discord.NET method..
+        /// Discord.NET method...
         /// </summary>
-        /// <returns>nothing</returns>
-        [Command("commands")]
-        [Alias("команды")]
+        /// <returns></returns>
+        [Command("rules")]
+        [Alias("правила")]
         [RequireBotPermission(ChannelPermission.SendMessages)]
-        public async Task PrintCommands()
+        public async Task Rules()
         {
             var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands)
-                .WithDescription(string.Format(Locale.Help, Client.Guilds.First(g => g.Id == Context.Guild.Id).Prefix) + $"\n{Locale.OpenSource}");
+                .WithDescription(Locale.Rules);
             await Context.Channel.SendMessageAsync(null, false, embedBuilder.Build());
         }
     }

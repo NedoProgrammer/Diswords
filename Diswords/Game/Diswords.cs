@@ -213,7 +213,7 @@ namespace Diswords.Game
                 case InputCheckResult.Gibberish:
                     await Channel.SendMessageAsync(null, false,
                         EmbedHelper.BuildError(Locale, Locale.NotAWord + "\n" +
-                                                       string.Format(Locale.SuggestCommand, Guild.Prefix,
+                                                       string.Format(Locale.HowToSuggest, Guild.Prefix,
                                                            Locale.SuggestCommand, Language.ShortName, word)));
                     break;
                 case InputCheckResult.NotFound:

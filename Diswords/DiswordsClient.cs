@@ -139,8 +139,21 @@ namespace Diswords
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Console.WriteLine($"Diswords: {e}");
                     throw;
+                }
+            };
+            Client.LeftGuild += async guild =>
+            {
+                var path =
+                    $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}";
+                if (!Directory.Exists(path))
+                    return;
+                var jsonGuild = GetGuild(guild.Id);
+                if (jsonGuild != null)
+                {
+                    var locale = ILocale.Find(jsonGuild.Language);
+                    Directory.Delete(path, true);
                 }
             };
             Client.MessageReceived += HandleCommandAsync;
@@ -251,9 +264,7 @@ namespace Diswords
         /// <returns>First found guild or null.</returns>
         private JsonGuild GetGuild(ulong id)
         {
-            var path =
-                $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}{Path.DirectorySeparatorChar}{id}.json";
-            return !File.Exists(path) ? null : JsonGuild.FromJson(File.ReadAllText(path));
+            return Guilds.FirstOrDefault(g => g.Id == id);
         }
     }
 }

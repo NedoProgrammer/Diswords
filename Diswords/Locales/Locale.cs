@@ -47,6 +47,8 @@ namespace Diswords.Locales
         public string GuildInfo { get; }
         public string WrongEndLetter { get; }
         public string DoneProcessing { get; }
+        public string Rules { get; }
+        public string OpenSource { get; }
 
         public static ILocale Find(string shortName)
         {
