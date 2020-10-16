@@ -1,9 +1,11 @@
+#nullable enable
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
+using Discord.WebSocket;
 using Diswords.Core.Helpers;
 using Diswords.Core.Json;
 using Diswords.Locales;
@@ -53,6 +55,7 @@ namespace Diswords.Game
         /// <param name="channel">Channel in what the game will be played.</param>
         /// <param name="createdNewChannel">Was a new channel created just for this game?</param>
         /// <param name="language">Language of the game.</param>
+        /// <param name="previousSlowModeInterval">Previous Slow Mode Interval (before the bot changed it).</param>
         public Diswords(DiswordsClient client, IGuildUser creator, JsonGuild guild, ITextChannel channel,
             bool createdNewChannel, int previousSlowModeInterval, JsonLanguage language)
         {
@@ -64,6 +67,7 @@ namespace Diswords.Game
             _newChannelCreated = createdNewChannel;
             _previousSlowModeInterval = previousSlowModeInterval;
             _client = client;
+            _lastSender = null!;
         }
 
         /// <summary>
@@ -162,6 +166,7 @@ namespace Diswords.Game
             if (input.StartsWith("//")) return InputCheckResult.IsComment;
             if (input.StartsWith(">")) return InputCheckResult.IsQuote;
             if (input.StartsWith("<:")) return InputCheckResult.IsEmoji;
+            if (input.StartsWith(":")) return InputCheckResult.IsEmoji;
             if (_lastSender.Id == sender.Id) return InputCheckResult.SameUser;
             if (UsedWords.Contains(input.ToLower())) return InputCheckResult.RepeatedWord;
             var splitWords = input.Split(" ");
@@ -182,16 +187,17 @@ namespace Diswords.Game
         /// </summary>
         /// <param name="word">The word that needs to be checked.</param>
         /// <param name="sender">The sender of that word.</param>
-        public async void HandleInput(string word, IUser sender)
+        public async void HandleInput(SocketUserMessage originalMessage)
         {
-            switch (_isValidInput(word, sender))
+            IUserMessage? errorMessage = null;
+            switch (_isValidInput(originalMessage.Content, originalMessage.Author))
             {
                 case InputCheckResult.Success:
-                    SetWord(word, sender);
+                    SetWord(originalMessage.Content, originalMessage.Author);
                     var message =
                         await Channel.SendMessageAsync(null, false,
                             EmbedHelper.BuildSuccess(Locale,
-                                string.Format(Locale.Continuing, _getValidWord(word).Last())));
+                                string.Format(Locale.Continuing, _getValidWord(originalMessage.Content).Last())));
                     await Task.Delay(5000);
                     await message.DeleteAsync();
                     break;
@@ -204,32 +210,44 @@ namespace Diswords.Game
                 case InputCheckResult.IsEmoji:
                     return;
                 case InputCheckResult.SameUser:
-                    await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale, Locale.InvalidUser));
+                    errorMessage = await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale, Locale.InvalidUser));
                     break;
                 case InputCheckResult.RepeatedWord:
-                    await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale, Locale.AlreadyUsedWord));
+                    errorMessage = await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale, Locale.AlreadyUsedWord));
                     break;
                 case InputCheckResult.TooManyWords:
-                    await Channel.SendMessageAsync(null, false,
-                        EmbedHelper.BuildError(Locale, string.Format(Locale.TooManyWords, word.Split(" ").Length)));
+                    errorMessage = await Channel.SendMessageAsync(null, false,
+                        EmbedHelper.BuildError(Locale, string.Format(Locale.TooManyWords, originalMessage.Content.Split(" ").Length)));
                     break;
                 case InputCheckResult.WrongLetter:
-                    await Channel.SendMessageAsync(null, false,
+                    errorMessage = await Channel.SendMessageAsync(null, false,
                         EmbedHelper.BuildError(Locale, string.Format(Locale.WrongWord, _lastLetter)));
                     break;
                 case InputCheckResult.Gibberish:
-                    await Channel.SendMessageAsync(null, false,
+                    errorMessage = await Channel.SendMessageAsync(null, false,
                         EmbedHelper.BuildError(Locale, Locale.NotAWord + "\n" +
                                                        string.Format(Locale.HowToSuggest, Guild.Prefix,
-                                                           Locale.SuggestCommand, Language.ShortName, word)));
+                                                           Locale.SuggestCommand, Language.ShortName, originalMessage.Content)));
                     break;
                 case InputCheckResult.NotFound:
-                    await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale,
+                    errorMessage = await Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(Locale,
                         string.Format(Locale.WordNotFound, Guild.Prefix, Locale.SuggestCommand, Language.ShortName,
-                            word)));
+                            originalMessage.Content)));
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
+            }
+
+            if (errorMessage == null) return;
+            await Task.Delay(10000);
+            try
+            {
+                await errorMessage.DeleteAsync();
+                await originalMessage.DeleteAsync();
+            }
+            catch
+            {
+                // ignored
             }
         }
 

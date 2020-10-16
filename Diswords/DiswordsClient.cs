@@ -252,7 +252,7 @@ namespace Diswords
             else
             {
                 var game = Games.FirstOrDefault(g => g.Channel.Id == context.Channel.Id);
-                game?.HandleInput(message.Content, message.Author);
+                game?.HandleInput(message);
             }
         }
 
