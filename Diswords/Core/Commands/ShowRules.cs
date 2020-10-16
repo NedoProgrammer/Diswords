@@ -19,7 +19,7 @@ namespace Diswords.Core.Commands
         [RequireBotPermission(ChannelPermission.SendMessages)]
         public async Task Rules()
         {
-            var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.Commands)
+            var embedBuilder = new EmbedBuilder().WithColor(Color.Orange).WithTitle(Locale.RulesWord)
                 .WithDescription(Locale.Rules);
             await Context.Channel.SendMessageAsync(null, false, embedBuilder.Build());
         }
