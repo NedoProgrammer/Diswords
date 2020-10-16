@@ -34,13 +34,14 @@ namespace Diswords.Core.Commands
             if (Client.Languages.All(x => x.ShortName != Locale.Name))
                 throw new Exception($"Diswords: Language {Locale.Name} was not found.");
             //Change the slow mode interval (delay between sending messages).
+            var smi = ((SocketTextChannel) Context.Channel).SlowModeInterval;
             await ((SocketTextChannel) Context.Channel).ModifyAsync(c =>
             {
                 c.SlowModeInterval = 10;
             });
             //Create the game.
             var game = new Game.Diswords(Client, Context.Message.Author as IGuildUser,
-                Client.Guilds.First(g => g.Id == Context.Guild.Id), Context.Channel as SocketTextChannel, false, ((SocketTextChannel) Context.Channel).SlowModeInterval,
+                Client.Guilds.First(g => g.Id == Context.Guild.Id), Context.Channel as SocketTextChannel, false, smi,
                 Client.Languages.First(x => x.ShortName == Locale.Name));
             var word = game.Language.Words[new Random((int) DateTime.Now.Ticks).Next(game.Language.Words.Count)];
             //The bot starts the game, so it sets the word first.
@@ -108,13 +109,14 @@ namespace Diswords.Core.Commands
             if (Client.Languages.All(x => x.ShortName != Locale.Name))
                 throw new Exception($"Diswords: Language {Locale.Name} was not found.");
             //Change the slow mode interval (delay between sending messages).
+            var smi = ((SocketTextChannel) Context.Channel).SlowModeInterval;
             await ((SocketTextChannel) Context.Channel).ModifyAsync(c =>
             {
                 c.SlowModeInterval = 10;
             });
             //Create the game.
             var game = new Game.Diswords(Client, Context.Message.Author as IGuildUser,
-                Client.Guilds.First(g => g.Id == Context.Guild.Id), Context.Channel as SocketTextChannel, false, ((SocketTextChannel) Context.Channel).SlowModeInterval,
+                Client.Guilds.First(g => g.Id == Context.Guild.Id), Context.Channel as SocketTextChannel, false, smi,
                 Client.Languages.First(x => x.ShortName == language));
             var word = game.Language.Words[new Random((int) DateTime.Now.Ticks).Next(game.Language.Words.Count)];
             //The bot starts the game, so it sets the word first.
