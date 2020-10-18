@@ -129,8 +129,6 @@ namespace Diswords.Core.Commands
                 JsonLanguage language = null!;
                 foreach (var suggestion in group)
                 {
-                    language = Client.Languages.First(l => l.ShortName == suggestion.Language);
-                    language.Words.Add(suggestion.Word.ToLower());
                     language = DiswordsClient.StaticLanguages.First(l => l.ShortName == suggestion.Language);
                     language.Words.Add(suggestion.Word.ToLower());
                 }
