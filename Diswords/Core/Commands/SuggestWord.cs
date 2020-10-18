@@ -136,7 +136,7 @@ namespace Diswords.Core.Commands
                 }
 
                 await File.WriteAllTextAsync(
-                    $"{Client.Config.RootDirectory}{Path.DirectorySeparatorChar}{Client.Config.LanguagesDirectoryName}{(string.IsNullOrEmpty(Client.Config.LanguagesDirectoryName) ? "" : "{Path.PathSeparator}")}{language.ShortName}.json",
+                    $"{Client.Config.RootDirectory}{Path.DirectorySeparatorChar}{Client.Config.LanguagesDirectoryName}{(string.IsNullOrEmpty(Client.Config.LanguagesDirectoryName) ? "" : Path.DirectorySeparatorChar.ToString())}{language.ShortName}.json",
                     language.ToJson());
             }
         }
