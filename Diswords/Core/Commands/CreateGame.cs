@@ -19,7 +19,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("create")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
         [RequireBotPermission(ChannelPermission.SendMessages)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         [Alias("создать")]
@@ -58,7 +58,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("createnew")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
         [RequireBotPermission(ChannelPermission.SendMessages)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         [RequireBotPermission(ChannelPermission.ManageChannels)]
@@ -94,7 +94,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("create")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
         [RequireBotPermission(ChannelPermission.SendMessages)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         [Alias("создать")]
@@ -133,7 +133,7 @@ namespace Diswords.Core.Commands
         /// <returns>nothing</returns>
         /// <exception cref="Exception">The language (somehow) was not found.</exception>
         [Command("createnew")]
-        [RequireUserPermission(GuildPermission.Administrator)]
+        [RequireUserPermission(GuildPermission.Administrator, Group = "Permission")]
         [RequireBotPermission(ChannelPermission.SendMessages)]
         [RequireBotPermission(ChannelPermission.ManageMessages)]
         [RequireBotPermission(ChannelPermission.ManageChannels)]
