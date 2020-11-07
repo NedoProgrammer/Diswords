@@ -118,30 +118,7 @@ namespace Diswords
             };
             Client.JoinedGuild += async guild =>
             {
-                try
-                {
-                    string language;
-                    if (guild.VoiceRegionId.StartsWith("us")) language = "en";
-                    else if (guild.VoiceRegionId == "russia") language = "ru";
-                    else language = Config.DefaultLanguage;
-                    var locale = ILocale.Find(language);
-                    guild.SystemChannel?.SendMessageAsync(locale.JoinedGuild);
-                    var jsonGuild = new JsonGuild(language, Config.DefaultPrefix, guild.Id);
-                    var path =
-                        $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}";
-                    if (!Directory.Exists(path))
-                        Directory.CreateDirectory(path);
-                    await File.WriteAllTextAsync(
-                        $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}{Path.DirectorySeparatorChar}{guild.Id}.json",
-                        jsonGuild.ToJson());
-                    Guilds.Add(jsonGuild);
-                    guild.SystemChannel?.SendMessageAsync(locale.SetupDone);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Diswords: {e}");
-                    throw;
-                }
+                await JoinedGuild(guild);
             };
             Client.LeftGuild += async guild =>
             {
@@ -234,7 +211,11 @@ namespace Diswords
             if (message == null) return;
             if (message.Author.IsBot) return;
             var guild = GetGuild(context.Guild.Id);
-            if (guild == null) return;
+            if (guild == null)
+            {
+                await JoinedGuild(context.Guild);
+                guild = GetGuild(context.Guild.Id);
+            }
             var argPos = 0;
             if (message.HasStringPrefix(guild.Prefix, ref argPos))
             {
@@ -264,6 +245,37 @@ namespace Diswords
         private JsonGuild GetGuild(ulong id)
         {
             return Guilds.FirstOrDefault(g => g.Id == id);
+        }
+        /// <summary>
+        /// Method for creating the config file for the guild.
+        /// </summary>
+        /// <param name="guild">The Joined Guild.</param>
+        private async Task JoinedGuild(SocketGuild guild)
+        {
+            try
+            {
+                string language;
+                if (guild.VoiceRegionId.StartsWith("us")) language = "en";
+                else if (guild.VoiceRegionId == "russia") language = "ru";
+                else language = Config.DefaultLanguage;
+                var locale = ILocale.Find(language);
+                guild.SystemChannel?.SendMessageAsync(locale.JoinedGuild);
+                var jsonGuild = new JsonGuild(language, Config.DefaultPrefix, guild.Id);
+                var path =
+                    $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}";
+                if (!Directory.Exists(path))
+                    Directory.CreateDirectory(path);
+                await File.WriteAllTextAsync(
+                    $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}{Path.DirectorySeparatorChar}{guild.Id}.json",
+                    jsonGuild.ToJson());
+                Guilds.Add(jsonGuild);
+                guild.SystemChannel?.SendMessageAsync(locale.SetupDone);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Diswords: {e}");
+                throw;
+            }
         }
     }
 }
