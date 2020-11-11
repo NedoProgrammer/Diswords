@@ -118,7 +118,11 @@ namespace Diswords
             };
             Client.JoinedGuild += async guild =>
             {
-                await JoinedGuild(guild);
+                var language = _findGuildLanguage(guild);
+                var locale = ILocale.Find(language);
+                guild.SystemChannel?.SendMessageAsync(locale.JoinedGuild);
+                await JoinedGuild(guild, language);
+                guild.SystemChannel?.SendMessageAsync(locale.SetupDone);
             };
             Client.LeftGuild += async guild =>
             {
@@ -213,8 +217,8 @@ namespace Diswords
             var guild = GetGuild(context.Guild.Id);
             if (guild == null)
             {
-                await JoinedGuild(context.Guild);
-                guild = GetGuild(context.Guild.Id);
+                await JoinedGuild(context.Guild, _findGuildLanguage(context.Guild));
+                await message.Channel.SendMessageAsync(null, false, EmbedHelper.BuildError(ILocale.Find("en"), "```unexpected error: please run this command again.```"));
             }
             var argPos = 0;
             if (message.HasStringPrefix(guild.Prefix, ref argPos))
@@ -250,16 +254,10 @@ namespace Diswords
         /// Method for creating the config file for the guild.
         /// </summary>
         /// <param name="guild">The Joined Guild.</param>
-        private async Task JoinedGuild(SocketGuild guild)
+        private async Task JoinedGuild(SocketGuild guild, string language)
         {
             try
             {
-                string language;
-                if (guild.VoiceRegionId.StartsWith("us")) language = "en";
-                else if (guild.VoiceRegionId == "russia") language = "ru";
-                else language = Config.DefaultLanguage;
-                var locale = ILocale.Find(language);
-                guild.SystemChannel?.SendMessageAsync(locale.JoinedGuild);
                 var jsonGuild = new JsonGuild(language, Config.DefaultPrefix, guild.Id);
                 var path =
                     $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}";
@@ -269,13 +267,27 @@ namespace Diswords
                     $"{Config.RootDirectory}{Path.DirectorySeparatorChar}{Config.GuildsDirectoryName}{(Config.GuildsDirectoryName == "" ? "" : Path.DirectorySeparatorChar.ToString())}{Client.CurrentUser.Id}{Path.DirectorySeparatorChar}{guild.Id}.json",
                     jsonGuild.ToJson());
                 Guilds.Add(jsonGuild);
-                guild.SystemChannel?.SendMessageAsync(locale.SetupDone);
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Diswords: {e}");
                 throw;
             }
+        }
+        /// <summary>
+        /// Find the default language of the guild by it's region.
+        /// </summary>
+        /// <param name="guild">The Guild</param>
+        /// <returns>A short language name (ru, en, etc.)</returns>
+        /// Since locales are created in two different methods, i needed to separate this function
+        /// to avoid copying a lot of code.
+        private string _findGuildLanguage(IGuild guild)
+        {
+            string language;
+            if (guild.VoiceRegionId.StartsWith("us")) language = "en";
+            else if (guild.VoiceRegionId == "russia") language = "ru";
+            else language = Config.DefaultLanguage;
+            return language;
         }
     }
 }
