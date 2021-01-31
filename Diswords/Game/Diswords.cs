@@ -174,6 +174,8 @@ namespace Diswords.Game
             if (!input.ToLower().StartsWith(char.ToLower(_lastLetter))) return InputCheckResult.WrongLetter;
             var words = Language.Words.Where(w => w.ToLower().StartsWith(char.ToLower(_lastLetter))).ToList();
             var results = words.Select(w => StringComparison.LevenshteinDistance(input, w)).ToList();
+            if (!char.IsLetter(input.Last()))
+                return InputCheckResult.Gibberish;
             if (results.Max() < 0.5f)
                 return InputCheckResult.Gibberish;
             if (results.Max() > 0.5f && !words.Contains(input.ToLower()))
